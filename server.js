@@ -42,7 +42,7 @@ io.sockets.on('connection',
         socket.broadcast.emit('mouse', data);
         
         // This is a way to send to everyone including sender
-        // io.sockets.emit('message', "this goes to everyone");
+        io.sockets.emit('message', "this goes to everyone");
 
       }
     );
