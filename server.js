@@ -63,6 +63,7 @@ io.sockets.on('connection',
 				for(let i =0;i<players.length;i++){
 					if(players[i].socketId == moveObj.socketId){
 						players[i].setMove(moveObj.move)
+						players[i].incrementTurn()
 						if(players[i].move == "rock"){players[i].incrementScore()}
 					}
 				}
@@ -101,8 +102,10 @@ class player{
 		this.name = ""
 		this.score = 0
 		this.move = ""
+		this.turnCount = 0;
 	}
 	incrementScore(){this.score++;}
+	incrementTurn(){this.turn++;}
 	setName(name){this.name = name}
 	setMove(move){this.move = move}
 }

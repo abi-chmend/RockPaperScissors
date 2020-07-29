@@ -6,7 +6,7 @@
 var socket;
 var players = []
 var move = ""
-var thisPlayer;
+var thisPlayerIndex;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -31,16 +31,15 @@ function setup() {
             players = players
             for(let i =0;i<players.length;i++){
                 if(players[i].socketId == socket.id){
-                    thisPlayer = players[i]
+                    thisPlayerIndex = i
                     background(0)
                     fill(255)
-                    text(thisPlayer.score, 100,100)
+                    text(players[thisPlayerIndex].score, 100,100)
                     text(thisPlayer.move, 100,150)
                 }
             }
         }
-        )
-
+    )
 }
 
 function draw() {
@@ -60,6 +59,8 @@ function mousePressed(){
     }
     text(move, 100,150)
     socket.emit('move',moveObj)
+
+
 }
 
 // Function for sending to the socket
