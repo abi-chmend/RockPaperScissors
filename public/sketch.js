@@ -35,11 +35,17 @@ function setup() {
                     background(0)
                     fill(255)
                     text(players[thisPlayerIndex].score, 100,100)
-                    text(thisPlayer.move, 100,150)
+                    text(players[thisPlayerIndex].move, 100,150)
+                    text(players[thisPlayerIndex].socketId, 100, 200)
+                    text("turn num: " + players[thisPlayerIndex].turnCount, 100 , 250  )
                 }
             }
         }
     )
+    socket.on('winner',
+        function(winString){
+            text("winner: " + winString, 100, 300)
+        })
 }
 
 function draw() {
@@ -47,6 +53,7 @@ function draw() {
 }
 
 function mousePressed(){
+
     var rand = Math.round(Math.random()*3+.5)
     switch (rand) {
         case 1:move = "rock"; break;
@@ -60,8 +67,4 @@ function mousePressed(){
     text(move, 100,150)
     socket.emit('move',moveObj)
 
-
 }
-
-// Function for sending to the socket
-

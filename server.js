@@ -42,32 +42,45 @@ io.sockets.on('connection',
 		console.log("We have a new client: " + socket.id);
 		players.push(new player(socket.id))
 
-		// When this user emits, client side: socket.emit('otherevent',some data);
-		socket.on('mouse',
-			function(data) {
-				// Data comes in as whatever was sent, including objects
-				console.log("Received: 'mouse' " + data.x + " " + data.y);
-				// console.log(players.length)
 
-				// Send it to all other clients
-				socket.broadcast.emit('mouse', data);
-
-				// This is a way to send to everyone including sender
-				io.sockets.emit('message', "this goes to everyone");
-
-			}
-		);
-		socket.on('move',
-			function(moveObj){
-				console.log(moveObj.move)
-				for(let i =0;i<players.length;i++){
-					if(players[i].socketId == moveObj.socketId){
-						players[i].setMove(moveObj.move)
-						players[i].incrementTurn()
-						if(players[i].move == "rock"){players[i].incrementScore()}
+		socket.on('name',
+			function (nameObj) {
+				for(let i =0;i<players.length;i++) {
+					if (players[i].socketId == nameObj.socketId) {
+						players[i].setName(nameObj.name)
 					}
 				}
-				io.sockets.emit('score', players[0].score)
+
+			}
+			)
+		socket.on('move',
+			function(moveObj){
+			var winner;
+			var winString;
+				for(let i =0;i<players.length;i++){
+					if(players[i].socketId == moveObj.socketId
+					&&players[i].turnCount == turnCount){
+						console.log(moveObj.move)
+
+						players[i].setMove(moveObj.move)
+						players[i].incrementTurn()
+						console.log("" + players[i].socketId + "turn: " + players[i].turnCount)
+						// if(players[i].move == "rock"){players[i].incrementScore()}
+					}
+
+				}
+				if(players[0].turnCount == players[1].turnCount){
+					turnCount++;
+					console.log(turnCount)
+					winner = gameLogic(players[0], players[1])
+					if (winner == null){winString = 'tie'}
+					else {
+						winner.incrementScore()
+						winString = winner.name
+					}
+					socket.emit('winner', winString)
+				}
+
 				io.sockets.emit('players' , players)
 			}
 		);
@@ -96,6 +109,8 @@ function gameLogic(p1, p2){
 		return p2
 	}
 }
+function getTurnCount(){return turnCount}
+
 class player{
 	constructor(socketId) {
 		this.socketId = socketId
@@ -105,7 +120,7 @@ class player{
 		this.turnCount = 0;
 	}
 	incrementScore(){this.score++;}
-	incrementTurn(){this.turn++;}
+	incrementTurn(){this.turnCount++;}
 	setName(name){this.name = name}
 	setMove(move){this.move = move}
 }
