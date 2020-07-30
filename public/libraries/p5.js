@@ -47946,7 +47946,7 @@
                       'fes.location',
                       {
                         location: location,
-                        // for e.g. get "sketch.js" from "https://example.com/abc/sketch.js"
+                        // for e.g. get "sketch2.js" from "https://example.com/abc/sketch.js"
                         file: parsed[3].fileName.split('/').slice(-1),
                         line: parsed[3].lineNumber
                       }
