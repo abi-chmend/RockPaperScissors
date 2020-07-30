@@ -43,7 +43,9 @@ io.sockets.on('connection',
     players[socket.id] = {
       name: "",
       move: "",
-      id: socket.id
+      id: socket.id,
+      isWinner: false,
+      score: 0
     }
 
     // Receive client name
@@ -60,6 +62,19 @@ io.sockets.on('connection',
       }
 
     );
+      socket.on('gotScore',
+
+          function(scoreObj) {
+
+              // Set player's name to received name
+              players[socket.id].score = scoreObj.score;
+
+
+              // Test that name is being received
+              console.log("Recieved: " + players[socket.id].score);
+          }
+
+      );
 
     // Receive client label from classifier
     socket.on('gotLabel',
@@ -86,6 +101,7 @@ io.sockets.on('connection',
 
   } // End connection function
 );
+
 
 
 

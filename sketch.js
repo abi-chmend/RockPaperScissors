@@ -16,6 +16,10 @@ let img;
 let playerName;
 let nextButton;
 let otherPlayerMove;
+let otherPlayerSocketId;
+let otherPlayerScore;
+
+let score;
 
 // Define variables for server
 var socket;
@@ -52,6 +56,8 @@ function setup() {
       // Save move that isn't current label as other player label
       if (data.id != socket.id) {
         otherPlayerMove = data.move;
+        otherPlayerSocketId = data.id;
+        otherPlayerScore = data.score;
         console.log(data.name + ' chose: ' + otherPlayerMove);
       }
     }
@@ -217,7 +223,14 @@ function gamePage() {
 function resultPage() {
   
   text(`Player name chose: ${otherPlayerMove}`, 200, 20);
-  text("You won/You loss", 200, 40);
+  if(isWinner() == null){text("Tie", 200, 40)}
+  else if(isWinner()){
+    text("You win!", 200, 40)
+    score++
+  }
+  else{text("You lose :(", 200, 40)}
+  // text("You won/You loss", 200, 40);
+  sendScore(score)
   nextButton.hide();
 }
 
@@ -281,6 +294,13 @@ function sendName(name) {
   socket.emit('gotName', nameObj);
 }
 
+function sendScore(score) {
+  var scoreObj = {
+    score:score
+  }
+
+  socket.emit('gotScore', scoreObj);
+}
 
 function sendLabel(label) {
 
@@ -291,3 +311,17 @@ function sendLabel(label) {
   socket.emit('gotLabel', labelObj);
 }
 
+//returns if current socket id is winner
+function isWinner(){
+  if(otherPlayerMove == label){
+    return null;
+  }
+  else if(otherPlayerMove == "rock" && label == "scissors" ||
+      otherPlayerMove == "scissors" && label == "paper" ||
+      otherPlayerMove == "paper" && label == "rock"){
+    return false
+  }
+  else{
+    return true
+  }
+}
