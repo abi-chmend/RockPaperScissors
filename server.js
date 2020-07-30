@@ -55,19 +55,19 @@ io.sockets.on('connection',
 			)
 		socket.on('move',
 			function(moveObj){
+			console.log("m received")
 			var winner;
 			var winString;
 				for(let i =0;i<players.length;i++){
 					if(players[i].socketId == moveObj.socketId
 					&&players[i].turnCount == turnCount){
-						console.log(moveObj.move)
+						// console.log(moveObj.move)
 
 						players[i].setMove(moveObj.move)
 						players[i].incrementTurn()
-						console.log("" + players[i].socketId + "turn: " + players[i].turnCount)
+						console.log("" + players[i].socketId + " turn: " + players[i].turnCount + " move: " + players[i].move)
 						// if(players[i].move == "rock"){players[i].incrementScore()}
 					}
-
 				}
 				if(players[0].turnCount == players[1].turnCount){
 					turnCount++;

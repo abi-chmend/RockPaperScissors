@@ -7,6 +7,7 @@ var socket;
 var players = []
 var move = ""
 var thisPlayerIndex;
+var timer  = 0
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -52,7 +53,7 @@ function draw() {
   // Nothing
 }
 
-function mousePressed(){
+function keyPressed(){
 
     var rand = Math.round(Math.random()*3+.5)
     switch (rand) {
@@ -66,5 +67,6 @@ function mousePressed(){
     }
     text(move, 100,150)
     socket.emit('move',moveObj)
+    console.log("m sent")
 
 }
