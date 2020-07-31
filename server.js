@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 // Supply app to HTTP server
 var server = require('http').Server(app);
 server.listen(PORT, function () {
-	console.log(`Listening on ${server.address().port}`);
+	console.log(`Listening on ${PORT}`);
 });
 
 // Tell server to serve index.html as root page
