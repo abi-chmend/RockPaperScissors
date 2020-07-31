@@ -58,7 +58,7 @@ io.sockets.on('connection',
 
 
         // Test that name is being received
-        console.log("Recieved: " + players[socket.id].name);
+        console.log("Received: " + players[socket.id].name);
       }
 
     );
@@ -71,7 +71,7 @@ io.sockets.on('connection',
 
 
               // Test that name is being received
-              console.log("Recieved: " + players[socket.id].score);
+              console.log("Received: " + players[socket.id].score);
           }
 
       );
