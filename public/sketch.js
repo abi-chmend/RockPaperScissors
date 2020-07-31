@@ -136,6 +136,7 @@ function draw() {
     // displayName();
     // Display snapshot image
     nextRound();
+
     if (gotImg) {
       displayImage(currentImg);
       picButton.hide();
@@ -258,17 +259,17 @@ function resultPage() {
 
 }
 
-// function nextRound() {
+function nextRound() {
 
-//   // Reset background
-//   background(backgroundColor);
+  // Reset background
+  background(backgroundColor);
 
-//   nextRoundButton.mousePressed(() => {
-//     // Set first time setup to false
-//     gotImg = false;
-//   }
-//   );
-// }
+  nextRoundButton.mousePressed(() => {
+    // Set first time setup to false
+    gotImg = false;
+  }
+  );
+}
 
 
 // Save image in current capture

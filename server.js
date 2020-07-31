@@ -58,7 +58,7 @@ io.sockets.on('connection',
 
 
         // Test that name is being received
-        console.log("Received: " + players[socket.id].name);
+        console.log("Received: name - " + players[socket.id].name);
       }
 
     );
@@ -71,7 +71,7 @@ io.sockets.on('connection',
 
 
               // Test that name is being received
-              console.log("Received: " + players[socket.id].score);
+              console.log("Received: score - " + players[socket.id].score);
           }
 
       );
@@ -84,7 +84,7 @@ io.sockets.on('connection',
 
 
         // Test that label is being received
-        console.log("Received: " + players[socket.id].move);
+        console.log("Received: move - " + players[socket.id].move);
 
         io.emit('otherPlayerLabel', players[socket.id]);
       }
