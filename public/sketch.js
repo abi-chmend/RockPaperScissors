@@ -16,10 +16,10 @@ let img;
 let playerName;
 let nextButton;
 let otherPlayerMove;
-let otherPlayerSocketId;
-let otherPlayerScore;
-
+let otherPlayerName;
+let nextRoundButton;
 let score;
+
 
 // Define variables for server
 var socket;
@@ -32,8 +32,11 @@ function preload() {
   classifier = ml5.imageClassifier(imageModeURL + 'model.json');
 }
 
+
+
 let gotImg = false;
 let currentImg;
+
 function setup() {
   createCanvas(400, 400);
   colorMode(HSB, 360, 100, 100);
@@ -56,14 +59,14 @@ function setup() {
       // Save move that isn't current label as other player label
       if (data.id != socket.id) {
         otherPlayerMove = data.move;
-        otherPlayerSocketId = data.id;
-        otherPlayerScore = data.score;
         console.log(data.name + ' chose: ' + otherPlayerMove);
+
+        // Save other player's name
+        otherPlayerName = data.name;
       }
     }
   
-  )
-
+  );
 
   video = createCapture(VIDEO);
   video.size(400, 400);
@@ -81,6 +84,14 @@ function setup() {
   nextButton = createButton("NEXT");
   nextButton.position(width/2.5, 380);
   nextButton.hide();
+
+
+  // Button for next round
+  nextRoundButton = createButton("NEXT ROUND");
+  nextRoundButton.position(width/2.5, 370);
+  nextRoundButton.hide();
+
+
 
   // Save image if button clicked
   picButton.mousePressed(() => {
@@ -123,8 +134,8 @@ function draw() {
     gamePage();
     picButton.show();
     // displayName();
-
     // Display snapshot image
+    nextRound();
     if (gotImg) {
       displayImage(currentImg);
       picButton.hide();
@@ -133,6 +144,7 @@ function draw() {
   }
   
 
+  // Once result pops up, show next button
   if (result) {
     // Show next button
     nextButton.show();
@@ -140,8 +152,11 @@ function draw() {
     // Show next screen when button pressed
     nextButton.mousePressed(() => {
       nextPressed = true;
+
+      // Set result to false so we can move to next screen
+      result = false;
     }
-      
+    
     );
   }
 }
@@ -158,7 +173,9 @@ function displayImage(imgToDisplay) {
   image(imgToDisplay, 0, 30, 400, 300);
   //noLoop();
 
+  // 
   if (nextPressed) {
+    nextButton.hide();
     background(backgroundColor);
     resultPage();
   }
@@ -216,23 +233,42 @@ function startPage() {
 function gamePage() {
   // Start video capture
   video.show();
-   
 }
 
 
 function resultPage() {
-  
-  text(`Player name chose: ${otherPlayerMove}`, 200, 20);
-  if(isWinner() == null){text("Tie", 200, 40)}
-  else if(isWinner()){
+  // Display results
+  textSize(15);
+  text(`${otherPlayerName} chose: ${otherPlayerMove}`, 200, 20);
+  // text("You won/You loss", 200, 40);
+
+  nextRoundButton.show();
+
+
+  if(isWinner() == null){
+    text("Tie", 200, 40)
+  } else if(isWinner()){
     text("You win!", 200, 40)
     score++
   }
-  else{text("You lose :(", 200, 40)}
-  // text("You won/You loss", 200, 40);
-  sendScore(score)
-  nextButton.hide();
+  else{text("You lose :(", 200, 40)
+    sendScore(score)
+  }
+  
+
 }
+
+// function nextRound() {
+
+//   // Reset background
+//   background(backgroundColor);
+
+//   nextRoundButton.mousePressed(() => {
+//     // Set first time setup to false
+//     gotImg = false;
+//   }
+//   );
+// }
 
 
 // Save image in current capture
@@ -294,6 +330,16 @@ function sendName(name) {
   socket.emit('gotName', nameObj);
 }
 
+
+function sendLabel(label) {
+  var labelObj = {
+    label: label
+  }
+  
+  socket.emit('gotLabel', labelObj);
+}
+
+
 function sendScore(score) {
   var scoreObj = {
     score:score
@@ -302,14 +348,6 @@ function sendScore(score) {
   socket.emit('gotScore', scoreObj);
 }
 
-function sendLabel(label) {
-
-  var labelObj = {
-    label: label
-  }
-  
-  socket.emit('gotLabel', labelObj);
-}
 
 //returns if current socket id is winner
 function isWinner(){
