@@ -8,10 +8,10 @@ var express = require('express');
 
 // Create new instance of express
 var app = express();
-
+const PORT = process.env.PORT || 3000;
 // Supply app to HTTP server
 var server = require('http').Server(app);
-server.listen(3000, function () {
+server.listen(PORT, function () {
 	console.log(`Listening on ${server.address().port}`);
 });
 
